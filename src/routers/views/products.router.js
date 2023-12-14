@@ -7,6 +7,7 @@ import config from "../../config.js";
 
 const router = Router();
 const privateRouter = (req, res, next) => {
+    // cambiar por jwt
     if (!req.session.user) {
         return res.redirect('/login');
     }
@@ -62,44 +63,47 @@ const buildPageLink = (req, page, limit, sort, category) => {
 //     const products = await ProductManager.get()
 //     res.status(200).json(products);
 // })
-router.get('/', privateRouter, async (req, res) => {
-    try {
-        const { page = 1, limit = 10, category, code, price, title, sort, stock } = req.query;
-        const options = {
-            page,
-            limit,
-            // sort: { price: sort || 'asc' }
-        }
-        const criteria = {};
-        if (sort) {
-            options.sort = { price: sort };
-        }
-        if (category) {
-            criteria.category = category;
-        }
-        if (code) {
-            criteria.code = code
-        }
-        if (price) {
-            criteria.price = price
-        }
-        if (title) {
-            criteria.title = title
-        }
+router.get('/',
+    // privateRouter,
+    async (req, res) => {
+        // console.log('entra');
+        try {
+            const { page = 1, limit = 10, category, code, price, title, sort, stock } = req.query;
+            const options = {
+                page,
+                limit,
+                // sort: { price: sort || 'asc' }
+            }
+            const criteria = {};
+            if (sort) {
+                options.sort = { price: sort };
+            }
+            if (category) {
+                criteria.category = category;
+            }
+            if (code) {
+                criteria.code = code
+            }
+            if (price) {
+                criteria.price = price
+            }
+            if (title) {
+                criteria.title = title
+            }
 
-        if (stock) {
-            console.log("stock", stock);
+            if (stock) {
+                console.log("stock", stock);
+            }
+
+            const result = await ProductManager.get(criteria, options)
+
+            res.render('products', buildResponse(result, req))
+
+        } catch (error) {
+            res.status(500).json({ error: error.message })
         }
-
-        const result = await ProductManager.get(criteria, options)
-
-        res.render('products', buildResponse(result, req))
-
-    } catch (error) {
-        res.status(500).json({ error: error.message })
-    }
-    // res.status(200).json(result);
-})
+        // res.status(200).json(result);
+    })
 // router.get('/', async (req, res) => {
 //     let products = await ProductManager.get();
 //     console.log("products", products);

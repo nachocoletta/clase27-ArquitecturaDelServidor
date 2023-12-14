@@ -6,6 +6,7 @@ export default class UserDao {
     }
 
     static create(data) {
+        console.log("data", data)
         return UserModel.create(data)
     }
 

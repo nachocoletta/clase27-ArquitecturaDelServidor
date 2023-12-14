@@ -40,19 +40,19 @@ const utilsDir = path.join(srcDir, 'utils');
 
 const app = express();
 
-const SESSION_SECRET = config.sessionSecret
-const URL_DB = config.db.mongodbURL
+// const SESSION_SECRET = config.sessionSecret
+// const URL_DB = config.db.mongodbURL
 // console.log(SESSION_SECRET);
-app.use(expressSession({
-  secret: SESSION_SECRET,
-  resave: false,
-  saveUninitialized: false,
-  store: MongoStore.create({
-    mongoUrl: URL_DB,
-    mongoOptions: {},
-    ttl: 3600,
-  }),
-}));
+// app.use(expressSession({
+//   secret: SESSION_SECRET,
+//   resave: false,
+//   saveUninitialized: false,
+//   store: MongoStore.create({
+//     mongoUrl: URL_DB,
+//     mongoOptions: {},
+//     ttl: 3600,
+//   }),
+// }));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -69,6 +69,7 @@ initPassportConfig(); // inicializacion de passport
 
 app.use(passport.initialize());
 // app.use(passport.session()); // este hay que comentarlo... me parece
+
 
 
 
