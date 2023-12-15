@@ -93,13 +93,6 @@ export class Exception extends Error {
 //     }
 // });
 
-const storage = multer.diskStorage({
-    destination: './public/productImages',
-    filename: (req, file, cb) => {
-        const filename = `${Date.now()}-${file.originalname}`;
-        cb(null, filename.replace(/\\/g, "/")); // Reemplazar barras invertidas con barras normales
-    }
-});
 
 export const createHash = (password) => {
     return bcrypt.hashSync(password, bcrypt.genSaltSync(10))
@@ -108,6 +101,14 @@ export const createHash = (password) => {
 export const isValidPassword = (plainPasswordFromLogin, user) => {
     return bcrypt.compareSync(plainPasswordFromLogin, user.password)
 }
+
+const storage = multer.diskStorage({
+    destination: './public/productImages',
+    filename: (req, file, cb) => {
+        const filename = `${Date.now()}-${file.originalname}`;
+        cb(null, filename.replace(/\\/g, "/")); // Reemplazar barras invertidas con barras normales
+    }
+});
 
 export const uploader = multer({ storage })
 

@@ -3,6 +3,7 @@ import { initDb } from './db/mongodb.js'
 import { Server } from 'socket.io';
 // import mongoose from 'mongoose';
 import ProductManager from './dao/ProductManager.js';
+import ProductsController from './controllers/products.controller.js';
 
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -54,20 +55,25 @@ export const init = async (httpServer) => {
         socketClient.emit('listCarts', carts)
 
         socketClient.on('addProduct', async (newProduct) => {
-            await ProductManager.create(newProduct);
-            let products = await ProductManager.get();
+            // await ProductManager.create(newProduct);
+            // let products = await ProductManager.get();
+            await ProductsController.create(newProduct)
+            let products = await ProductsController.get()
             io.emit('listProducts', products)
         })
 
         socketClient.on('deleteProduct', async (productId) => {
-            await ProductManager.deleteById(productId);
-            let products = await ProductManager.get();
+            await ProductsController.deleteById(productId)
+            // ProductManager.deleteById(productId);
+            let products = await ProductsController.get();
             io.emit('listProducts', products)
         })
 
         socketClient.on('updateProduct', async (product) => {
-            await ProductManager.updateById(product._id, product)
-            let products = await ProductManager.get();
+            // await ProductManager.updateById(product._id, product)
+            // let products = await ProductManager.get();
+            await ProductsController.updateById(product._id, product)
+            let products = await ProductsController.get();
             io.emit('listProducts', products)
         })
 

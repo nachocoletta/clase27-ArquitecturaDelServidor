@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import 'dotenv/config';
-import UserManager from '../../dao/UserManager.js';
+// import 'dotenv/config';
+// import UserManager from '../../dao/UserManager.js';
 import UsersController from '../../controllers/users.controller.js';
 import AuthController from '../../controllers/auth.controller.js';
 
@@ -18,19 +18,22 @@ const router = Router();
 router.post('/login', async (req, res) => {
     const { email, password } = req.body;
 
-    console.log('entrando a login ahora con jwt')
+    // console.log('entrando a login ahora con jwt')
     try {
-        const user = await UsersController.getByMail(email)
+        // const user = await UsersController.getByMail(email)
+        const user = await UsersController.get({ email })
         // console.log(user);
+
+
         if (!user) {
             return res.status(401).json({ message: "Correo o password invalidos" })
         }
-        const isPassValid = isValidPassword(password, user)
+        const isPassValid = isValidPassword(password, user[0])
         if (!isPassValid) {
             return res.status(401).json({ message: "Correo o password invalidos" })
         }
 
-        const token = tokenGenerator(user);
+        const token = tokenGenerator(user[0]);
         // console.log('paso por aca')
         // res.status(200).json({ access_token: token })
         res
@@ -79,7 +82,26 @@ router.get('/current',
         }
     })
 
+router.post('/password-recovery',
+    async (req, res, next) => {
+        const { email, newPassword } = req.body;
 
+        try {
+            const user = await UsersController.get({ email })
+
+            if (!user) {
+                return res.status(401).json({ message: "Correo o password invalidos" })
+            }
+
+            const updatedUser = await AuthController.resetPassword({ email, newPassword })
+
+            return res.status(204).end()
+        } catch (error) {
+            next(error)
+        }
+
+    }
+)
 // router.post('/register', async (req, res) => {
 //     console.log('entra');
 //     console.log(req.body)

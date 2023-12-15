@@ -42,4 +42,11 @@ export default class AuthController {
         const token = tokenGenerator(user)
         return token;
     }
+
+    static async resetPassword(data) {
+        const { email, newPassword } = data
+
+
+        await UsersController.updatePassword(email, newPassword)
+    }
 }

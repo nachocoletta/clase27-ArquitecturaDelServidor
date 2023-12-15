@@ -22,7 +22,7 @@ const buildResponse = (data, req) => {
         return {
             title: "Products",
             status: "success",
-            user: req.session.user,
+            // user: req.session.user,
             payload: data.docs.map(product => product.toJSON()),
             totalPages: data.totalPages,
             prevPage: data.prevPage,
@@ -37,7 +37,7 @@ const buildResponse = (data, req) => {
     return {
         title: "Products",
         status: "success",
-        user: req.session.user,
+        // user: req.session.user,
         payload: data.docs.map(product => product.toJSON()),
         totalPages: data.totalPages,
         prevPage: data.prevPage,

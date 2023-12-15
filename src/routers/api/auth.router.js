@@ -8,7 +8,7 @@ router.post('/auth/login', async (req, res) => {
     const { email, password } = req.body;
 
     const user = await UsersController.getByMail(email);
-    console.log("user", user)
+    // console.log("user", user)
     if (!user) {
         return res.status(401).json({ message: 'Email o pass invalidos.' });
     }

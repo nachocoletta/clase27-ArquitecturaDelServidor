@@ -40,12 +40,16 @@ export default class UsersController {
 
     static async updatePassword(email, newPassword) {
         console.log("Actualizando clave del usuario");
+
         const users = await UsersController.get({ email })
-        if (users.length) {
+
+
+        if (!users.length) {
             throw new Error(`El mail proporcionado no existe en la DB`)
         }
         await UsersService.updateById(users[0]._id, { password: createHash(newPassword) })
         console.log("Clave correctamente actualizada")
+
     }
 
     static async deleteById(uid) {

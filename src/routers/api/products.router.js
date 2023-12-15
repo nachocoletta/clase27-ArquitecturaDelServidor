@@ -5,6 +5,7 @@ import ProductManager from "../../dao/ProductManager.js";
 import { uploader } from "../../helpers/utils.js";
 
 import config from "../../config.js";
+import ProductsController from "../../controllers/products.controller.js";
 
 const router = Router();
 
@@ -24,58 +25,67 @@ const buildResponse = (data) => {
     }
 }
 
-router.get('/', async (req, res) => {
-    try {
-        const { page = 1, limit = 10, category, sort } = req.query;
-        const options = { page, limit, sort: { price: sort || 'desc' } }
-        const criteria = {};
+router.get('/',
+    async (req, res) => {
+        try {
+            const { page = 1, limit = 10, category, sort } = req.query;
+            const options = {
+                page,
+                limit,
+                sort: { price: sort || 'asc' }
+            }
+            // const options = { page, limit }
+            const criteria = {};
 
-        // console.log(limit)
-        if (category) {
-            console.log("query", category)
-            criteria.category = category;
+            console.log("entro aqui")
+            if (category) {
+                console.log("query", category)
+                criteria.category = category;
+            }
+            const result = await ProductsController.get(criteria, options)
+
+            res.status(200).json(result);
+
+        } catch (error) {
+            res.status(500).json({ error: error.message })
         }
-        const result = await ProductManager.get(criteria, options)
-        // const result = await productModel.paginate(criteria, options)
-        // res.render('products', buildResponse(result))
-        res.status(200).json(result);
-
-    } catch (error) {
-        res.status(500).json({ error: error.message })
-    }
-})
+    })
 
 // router.get('/', async (req, res) => {
 //     const products = await ProductManager.get()
 //     res.status(200).json(products);
 // })
 
-router.get('/:pid', async (req, res) => {
-    try {
-        const { pid } = req.params;
+router.get('/:pid',
+    async (req, res) => {
+        try {
+            const { pid } = req.params;
 
-        const product = await ProductManager.getById(pid);
-        res.status(200).json(product);
-    } catch (error) {
-        res.status(error.statusCode || 500).json({ message: error.message })
-    }
-})
+            const product = await ProductsController.getById(pid);
+            res.status(200).json(product);
+        } catch (error) {
+            res.status(error.statusCode || 500).json({ message: error.message })
+        }
+    })
 
 
-router.post('/', uploader.array('thumbnails', 4), async (req, res) => {
-    const { body } = req;
-    const { files } = req;
-    // console.log('entra a la ruta');
-    // console.log('Files:', req.files);
+router.post('/',
+    uploader.array('thumbnails', 4),
+    async (req, res) => {
+        const { body } = req;
+        const { files } = req;
+        // console.log('entra a la ruta');
+        // console.log('Files:', req.files);
 
-    try {
-        const product = await ProductManager.create(body, files);
-        res.redirect(`/products`)
-        // res.status(201).json(product);
-    } catch (error) {
-        res.status(error.statusCode || 500).json({ message: error.message });
-    }
-});
+        try {
+
+            const product = await ProductsController.create(body, files);
+            res.redirect(`/products`)
+            // res.status(201).json(product);
+        } catch (error) {
+            res.status(error.statusCode || 500).json({ message: error.message });
+        }
+    });
 // router.post('/', async (req, res) => {
 //     const { body } = req;
 
@@ -87,26 +97,28 @@ router.post('/', uploader.array('thumbnails', 4), async (req, res) => {
 //     }
 // })
 
-router.put('/:pid', async (req, res) => {
-    const { pid } = req.params;
-    const { body } = req
-    try {
-        await ProductManager.updateById(pid, body)
-        res.status(204).end();
-    } catch (error) {
-        res.status(error.statusCode || 500).json({ message: error.message })
-    }
-})
-
-router.delete('/:pid', async (req, res) => {
-    try {
+router.put('/:pid',
+    async (req, res) => {
         const { pid } = req.params;
+        const { body } = req
+        try {
+            await ProductManager.updateById(pid, body)
+            res.status(204).end();
+        } catch (error) {
+            res.status(error.statusCode || 500).json({ message: error.message })
+        }
+    })
 
-        await ProductManager.deleteById(pid);
-        res.status(204).end();
-    } catch (error) {
-        res.status(error.statusCode || 500).json({ message: error.message })
-    }
-})
+router.delete('/:pid',
+    async (req, res) => {
+        try {
+            const { pid } = req.params;
+
+            await ProductManager.deleteById(pid);
+            res.status(204).end();
+        } catch (error) {
+            res.status(error.statusCode || 500).json({ message: error.message })
+        }
+    })
 
 export default router;
