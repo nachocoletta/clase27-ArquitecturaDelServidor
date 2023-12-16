@@ -2,14 +2,15 @@
 import { initDb } from './db/mongodb.js'
 import { Server } from 'socket.io';
 // import mongoose from 'mongoose';
-import ProductManager from './dao/ProductManager.js';
+// import ProductManager from './dao/ProductManager.js';
 import ProductsController from './controllers/products.controller.js';
 import CartController from './controllers/cart.controller.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
-import CartManager from './dao/CartManager.js';
-import MessageManager from './dao/MessageManager.js';
+// import CartManager from './dao/CartManager.js';
+// import MessageManager from './dao/MessageManager.js';
+import MessageController from './controllers/message.controller.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -30,7 +31,7 @@ export const init = async (httpServer) => {
 
         console.log(`Se ha conectado un nuevo cliente 🎉 (${socketClient.id})`);
 
-        const messages = await MessageManager.get();
+        const messages = await MessageController.get();
         // console.log('messages', messages)
         socketClient.emit('listMessages', messages);
 
@@ -40,17 +41,17 @@ export const init = async (httpServer) => {
 
         socketClient.on('new-message', async (data) => {
             const { username, text } = data;
-            let newMessage = await MessageManager.create(data)
+            let newMessage = await MessageController.create(data)
             // messages.push({ username, text });
-            let allMessages = await MessageManager.get();
+            let allMessages = await MessageController.get();
             // console.log("allMessages", allMessages);
             io.emit('notification', allMessages);
         })
 
-        const products = await ProductManager.get()
+        const products = await ProductsController.get()
         socketClient.emit('listProducts', products)
 
-        const carts = await CartManager.get();
+        const carts = await CartController.get();
         // console.log("carts", JSON.stringify(carts))
         socketClient.emit('listCarts', carts)
 
