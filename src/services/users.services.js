@@ -14,7 +14,7 @@ export default class UsersService {
     }
 
     static findById(uid) {
-        return UserDao.getById(uid, payload)
+        return UserDao.getById(uid)
     }
 
     static updateById(uid, payload) {

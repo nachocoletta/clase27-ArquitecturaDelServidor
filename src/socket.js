@@ -4,7 +4,7 @@ import { Server } from 'socket.io';
 // import mongoose from 'mongoose';
 import ProductManager from './dao/ProductManager.js';
 import ProductsController from './controllers/products.controller.js';
-
+import CartController from './controllers/cart.controller.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
@@ -78,19 +78,19 @@ export const init = async (httpServer) => {
         })
 
         socketClient.on('createCart', async (newCart) => {
-            await CartManager.create(newCart);
-            let carts = await CartManager.get()
+            await CartController.create(newCart);
+            let carts = await CartController.get()
             io.emit('listCarts', carts)
         })
 
         socketClient.on('addProductToCart', async (product) => {
             // console.log(product)
             try {
-                let findedProduct = await ProductManager.getById(product._id)
+                let findedProduct = await ProductsController.getById(product._id)
                 // console.log("findedProduct", findedProduct);
                 if (findedProduct) {
-                    await CartManager.addProductToCart(product.cartId, findedProduct._id, product.quantity)
-                    let carts = await CartManager.get()
+                    await CartController.addProductToCart(product.cartId, findedProduct._id, product.quantity)
+                    let carts = await CartController.get()
                     io.emit('listCarts', carts)
                 } else {
                     console.log('Product not found')
@@ -103,8 +103,8 @@ export const init = async (httpServer) => {
         })
 
         socketClient.on('deleteCart', async (cartId) => {
-            await CartManager.deleteById(cartId);
-            let carts = await CartManager.get()
+            await CartController.deleteById(cartId);
+            let carts = await CartController.get()
             io.emit('listCarts', carts)
         })
         socketClient.on('disconnect', () => {

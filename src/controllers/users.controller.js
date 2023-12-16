@@ -9,7 +9,7 @@ export default class UsersController {
     }
 
     static async create(data) {
-        console.log("data", data)
+        // console.log("data", data)
         const user = await UsersService.create(data)
         return user;
     }
