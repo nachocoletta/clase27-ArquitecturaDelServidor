@@ -27,9 +27,7 @@ export default class CartsService {
         return CartDao.deleteById(cid)
     }
 
-    static removeFromCart(cid, payload) {
-        return CartDao.removeFromCart(cid, payload)
-    }
+
 
 
 }

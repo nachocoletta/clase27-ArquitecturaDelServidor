@@ -88,14 +88,15 @@ export default class CartController {
 
     static async removeAllProductsFromCart(cid) {
         try {
-            const cart = await CartModel.findById(cid);
+            const cart = await CartController.getById(cid);
 
             if (!cart) {
                 throw new Exception('No existe el carrito', 404);
             }
 
             cart.products = [];
-            const updatedCart = await cart.save();
+
+            const updatedCart = await CartsService.updateById(cid, cart.products)
 
             return updatedCart;
         } catch (error) {

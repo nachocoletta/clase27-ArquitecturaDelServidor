@@ -14,9 +14,10 @@ export default class CartDao {
         return await CartModel.findById(cid);
     }
 
-    static async updateById(cartId, products) {
-        return await CartModel.findOneAndUpdate({ _id: cartId }, { $set: { products } })
+    static async updateById(cid, products) {
+        return await CartModel.findOneAndUpdate({ _id: cid }, { $set: { products } })
     }
+
 
     static async deleteById(cid) {
         return await CartModel.deleteOne({ _id: cid })
