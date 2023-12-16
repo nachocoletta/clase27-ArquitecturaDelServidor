@@ -62,22 +62,23 @@ export default class CartController {
             }
             // console.log(productId);
             // console.log(cart);
-            console.log(cart.products)
+            // console.log("cart.products", cart.products)
+
             const existingProductIndex = cart.products.findIndex(
                 (product) => String(product.productId._id) === String(productId)
             );
 
 
 
-            console.log("existingProduct", existingProductIndex);
             if (existingProductIndex !== -1) {
+                console.log("existingProduct", existingProductIndex);
                 cart.products.splice(existingProductIndex, 1)
             } else {
                 throw new Exception('No se encontro el producto en el carrito', 404)
             }
 
 
-            const updatedCart = await CartsService.updateById(cid, cart)
+            const updatedCart = await CartsService.updateById(cid, cart.products)
 
             return updatedCart;
         } catch (error) {
