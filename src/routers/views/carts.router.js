@@ -1,5 +1,6 @@
 import { Router } from "express";
-import CartManager from "../../dao/CartManager.js"
+// import CartManager from "../../dao/CartManager.js"
+import CartController from "../../controllers/cart.controller.js";
 const router = Router();
 
 const buildResponse = (cid, data) => {
@@ -15,7 +16,7 @@ const buildResponse = (cid, data) => {
 router.get('/:cid', async (req, res) => {
     const { cid } = req.params;
     try {
-        const result = await CartManager.getById(cid)
+        const result = await CartController.getById(cid)
         // console.log('result', result);
         // console.log('resultB', result.products.p);
         // console.log('result', result.products);

@@ -1,7 +1,8 @@
 import { Router } from "express";
 import productModel from "../../models/product.model.js";
 // import { emitFromApi } from '../../socket.js';
-import ProductManager from "../../dao/ProductManager.js";
+// import ProductManager from "../../dao/ProductManager.js";
+import ProductController from '../../controllers/products.controller.js'
 // import { ProductManager } from '../../dao/ProductManager.js';
 import config from "../../config.js";
 
@@ -95,7 +96,7 @@ router.get('/',
                 console.log("stock", stock);
             }
 
-            const result = await ProductManager.get(criteria, options)
+            const result = await ProductController.get(criteria, options)
 
             res.render('products', buildResponse(result, req))
 

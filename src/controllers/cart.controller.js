@@ -106,7 +106,7 @@ export default class CartController {
 
     static async updateProductQuantityFromCart(cid, pid, quantity) {
         try {
-            const cart = await CartModel.findById(cid);
+            const cart = await CartsService.findById(cid);
 
             if (!cart) {
                 throw new Exception('No existe el carrito', 404);
@@ -121,7 +121,8 @@ export default class CartController {
                 cart.products[existingProductIndex].quantity = Number(quantity)
             }
 
-            const updatedCart = await cart.save();
+            const updatedCart = await CartsService.updateById(cid, cart.products)
+
 
             return updatedCart;
         } catch (error) {
